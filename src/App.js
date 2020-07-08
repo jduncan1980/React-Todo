@@ -3,6 +3,7 @@ import { Container, Typography, Grid } from '@material-ui/core';
 
 import TodoList from './components/TodoList';
 import TodoForm from './components/TodoForm';
+import SearchBar from './components/SearchBar';
 
 class App extends React.Component {
 	constructor(props) {
@@ -20,6 +21,7 @@ class App extends React.Component {
 					completed: true,
 				},
 			],
+			searchText: '',
 		};
 	}
 
@@ -42,9 +44,9 @@ class App extends React.Component {
 		});
 	};
 
-	// handleNewTask = (e) => {
-	// 	this.setState({ newTask: e.target.value });
-	// };
+	handleSearch = (text) => {
+		this.setState({ searchText: text });
+	};
 
 	handleDeleteAllTasks = () => {
 		this.setState({ tasks: [] });
@@ -70,6 +72,10 @@ class App extends React.Component {
 	render() {
 		return (
 			<Container fixed>
+				<SearchBar
+					handleSearch={this.handleSearch}
+					searchText={this.state.searchText}
+				/>
 				<Grid container direction='column' alignItems='center' spacing={4}>
 					<Grid item>
 						<Typography variant='h1'>Welcome to your Todo App!</Typography>
@@ -78,13 +84,12 @@ class App extends React.Component {
 						<TodoList
 							todos={this.state.tasks}
 							handleMarkCompleted={this.handleMarkCompleted}
+							searchText={this.state.searchText}
 						/>
 					</Grid>
 					<Grid item>
 						<TodoForm
 							addToDo={this.addTodo}
-							// handleNewTask={this.handleNewTask}
-							// newTask={this.state.newTask}
 							handleDeleteAllTasks={this.handleDeleteAllTasks}
 							deleteCompleted={this.handleDeleteCompleted}
 						/>
