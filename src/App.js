@@ -20,51 +20,51 @@ class App extends React.Component {
 					completed: true,
 				},
 			],
-			newTask: '',
 		};
-
-		this.addTodo = this.addTodo.bind(this);
-		this.handleNewTask = this.handleNewTask.bind(this);
-		this.handleDeleteAllTasks = this.handleDeleteAllTasks.bind(this);
-		this.handleMarkCompleted = this.handleMarkCompleted.bind(this);
-		this.handleDeleteCompleted = this.handleDeleteCompleted.bind(this);
 	}
 
-	addTodo = (e) => {
-		e.preventDefault();
-		if (this.state.newTask !== '') {
-			this.setState({
-				tasks: [
-					...this.state.tasks,
-					{ task: this.state.newTask, id: Date.now(), completed: false },
-				],
-				newTask: '',
-			});
+	componentDidMount() {
+		if (localStorage.getItem('tasks')) {
+			this.setState({ tasks: JSON.parse(localStorage.getItem('tasks')) });
 		}
+	}
+
+	componentDidUpdate() {
+		localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+	}
+
+	addTodo = (newTask) => {
+		this.setState({
+			tasks: [
+				...this.state.tasks,
+				{ task: newTask, id: Date.now(), completed: false },
+			],
+		});
 	};
 
-	handleNewTask = (e) => {
-		this.setState({ newTask: e.target.value });
-	};
+	// handleNewTask = (e) => {
+	// 	this.setState({ newTask: e.target.value });
+	// };
 
 	handleDeleteAllTasks = () => {
 		this.setState({ tasks: [] });
 	};
 
 	handleMarkCompleted = (task) => {
-		const tempArray = this.state.tasks;
-		const temp = tempArray.map((item) => {
-			if (item.id === task.id) {
-				item.completed = !item.completed;
-			}
-			return item;
+		this.setState({
+			tasks: this.state.tasks.map((currentTask) => {
+				if (currentTask.id === task.id) {
+					currentTask.completed = !currentTask.completed;
+				}
+				return currentTask;
+			}),
 		});
-		this.setState({ tasks: [...temp] });
 	};
 
 	handleDeleteCompleted = () => {
-		const temp = this.state.tasks.filter((task) => task.completed === false);
-		this.setState({ tasks: temp });
+		this.setState({
+			tasks: this.state.tasks.filter((task) => task.completed === false),
+		});
 	};
 
 	render() {
@@ -83,8 +83,8 @@ class App extends React.Component {
 					<Grid item>
 						<TodoForm
 							addToDo={this.addTodo}
-							handleNewTask={this.handleNewTask}
-							newTask={this.state.newTask}
+							// handleNewTask={this.handleNewTask}
+							// newTask={this.state.newTask}
 							handleDeleteAllTasks={this.handleDeleteAllTasks}
 							deleteCompleted={this.handleDeleteCompleted}
 						/>
