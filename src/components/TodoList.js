@@ -2,18 +2,18 @@ import React from 'react';
 import Todo from './Todo';
 import { Grid } from '@material-ui/core';
 
-function TodoList(props) {
+function TodoList({ searchText, handleMarkCompleted, todos }) {
 	return (
 		<>
-			{props.todos
-				.filter((todo) => todo.task.includes(props.searchText))
+			{todos
+				.filter((todo) => todo.task.includes(searchText))
 				.map((todo) => {
 					return (
-						<Grid item key={todo.id}>
+						<Grid item key={todo.id} style={{ maxWidth: '90%' }}>
 							<Todo
 								task={todo.task}
 								completed={todo.completed}
-								handleMarkCompleted={props.handleMarkCompleted}
+								handleMarkCompleted={handleMarkCompleted}
 								todo={todo}
 							/>
 						</Grid>

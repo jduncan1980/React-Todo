@@ -1,13 +1,21 @@
-import React from 'react';
-import { Container, Typography, Grid } from '@material-ui/core';
-
+import React, { Fragment } from 'react';
+import {
+	Container,
+	Grid,
+	ThemeProvider,
+	Typography,
+	CssBaseline,
+} from '@material-ui/core';
+import Media from 'react-media';
 import TodoList from './components/TodoList';
 import TodoForm from './components/TodoForm';
+import MobileForm from './components/MobileForm';
 import SearchBar from './components/SearchBar';
+import theme from './theme';
 
 class App extends React.Component {
-	constructor(props) {
-		super(props);
+	constructor() {
+		super();
 		this.state = {
 			tasks: [
 				{
@@ -71,31 +79,99 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<Container fixed>
-				<SearchBar
-					handleSearch={this.handleSearch}
-					searchText={this.state.searchText}
-				/>
-				<Grid container direction='column' alignItems='center' spacing={4}>
-					<Grid item>
-						<Typography variant='h1'>Welcome to your Todo App!</Typography>
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				<Container fixed>
+					<SearchBar
+						handleSearch={this.handleSearch}
+						searchText={this.state.searchText}
+					/>
+					<Grid container direction='column' alignItems='center' spacing={4}>
+						{this.state.tasks.length === 0 ? (
+							<Typography
+								variant='h2'
+								component='h2'
+								style={{ marginTop: '2rem' }}
+							>
+								You have nothing to do...
+							</Typography>
+						) : (
+							<Media
+								queries={{
+									small: '(max-width: 719px)',
+									medium: '(min-width: 720px)',
+								}}
+							>
+								{(matches) => (
+									<Fragment>
+										{matches.small && (
+											<Grid
+												item
+												container
+												direction='column'
+												alignItems='center'
+												style={{ marginTop: '2rem', marginLeft: '-16px' }}
+												spacing={2}
+											>
+												<TodoList
+													todos={this.state.tasks}
+													handleMarkCompleted={this.handleMarkCompleted}
+													searchText={this.state.searchText}
+												/>
+											</Grid>
+										)}
+										{matches.medium && (
+											<Grid
+												item
+												container
+												direction='row'
+												justify='space-between'
+												alignItems='center'
+												style={{ marginTop: '2rem' }}
+												// spacing={2}
+											>
+												<TodoList
+													todos={this.state.tasks}
+													handleMarkCompleted={this.handleMarkCompleted}
+													searchText={this.state.searchText}
+												/>
+											</Grid>
+										)}
+									</Fragment>
+								)}
+							</Media>
+						)}
+
+						<Grid item>
+							<Media
+								queries={{
+									small: '(max-width: 719px)',
+									medium: '(min-width: 720px)',
+								}}
+							>
+								{(matches) => (
+									<Fragment>
+										{matches.small && (
+											<MobileForm
+												addToDo={this.addTodo}
+												handleDeleteAllTasks={this.handleDeleteAllTasks}
+												deleteCompleted={this.handleDeleteCompleted}
+											/>
+										)}
+										{matches.medium && (
+											<TodoForm
+												addToDo={this.addTodo}
+												handleDeleteAllTasks={this.handleDeleteAllTasks}
+												deleteCompleted={this.handleDeleteCompleted}
+											/>
+										)}
+									</Fragment>
+								)}
+							</Media>
+						</Grid>
 					</Grid>
-					<Grid item container direction='column' alignItems='center'>
-						<TodoList
-							todos={this.state.tasks}
-							handleMarkCompleted={this.handleMarkCompleted}
-							searchText={this.state.searchText}
-						/>
-					</Grid>
-					<Grid item>
-						<TodoForm
-							addToDo={this.addTodo}
-							handleDeleteAllTasks={this.handleDeleteAllTasks}
-							deleteCompleted={this.handleDeleteCompleted}
-						/>
-					</Grid>
-				</Grid>
-			</Container>
+				</Container>
+			</ThemeProvider>
 		);
 	}
 }

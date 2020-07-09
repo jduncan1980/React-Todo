@@ -1,7 +1,20 @@
 import React, { Component } from 'react';
-import { Grid, Button, TextField } from '@material-ui/core';
+import { Grid, Button, AppBar, Toolbar } from '@material-ui/core';
+import Input from './Input';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import { styled } from '@material-ui/core/styles';
 
-export default class TodoForm extends Component {
+const FormBar = styled(Toolbar)({
+	display: 'flex',
+	justifyContent: 'center',
+});
+
+const Form = styled(AppBar)({
+	top: 'auto',
+	bottom: 0,
+});
+
+class TodoForm extends Component {
 	constructor(props) {
 		super(props);
 
@@ -24,43 +37,56 @@ export default class TodoForm extends Component {
 	};
 	render() {
 		return (
-			<form onSubmit={this.handleSubmit}>
-				<Grid container direction='column' alignItems='center' spacing={2}>
-					<Grid item>
-						<TextField
-							type='text'
-							id='task'
-							name='task'
-							placeholder='Enter Task'
-							value={this.state.item}
-							onChange={this.handleChange}
-						/>
-					</Grid>
-					<Grid item>
-						<Button type='submit' variant='contained' color='primary'>
-							Add Task
-						</Button>
-					</Grid>
-					<Grid item>
-						<Button
-							onClick={this.props.deleteCompleted}
-							variant='contained'
-							color='primary'
-						>
-							Delete Completed
-						</Button>
-					</Grid>
-					<Grid item>
-						<Button
-							onClick={this.props.handleDeleteAllTasks}
-							variant='contained'
-							color='secondary'
-						>
-							Delete All
-						</Button>
-					</Grid>
-				</Grid>
-			</form>
+			<>
+				<Form>
+					<FormBar>
+						<form onSubmit={this.handleSubmit}>
+							<Grid
+								container
+								justify='space-between'
+								alignItems='center'
+								spacing={4}
+								wrap='nowrap'
+							>
+								<Grid item>
+									<Input
+										placeholder='Enter Task'
+										value={this.state.item}
+										onChange={this.handleChange}
+										ariaLabel='new-task'
+										icon={<AssignmentIcon />}
+									/>
+								</Grid>
+								<Grid item>
+									<Button type='submit' variant='contained' color='secondary'>
+										Add Task
+									</Button>
+								</Grid>
+								<Grid item>
+									<Button
+										onClick={this.props.deleteCompleted}
+										variant='contained'
+										color='secondary'
+									>
+										Delete Completed
+									</Button>
+								</Grid>
+								<Grid item>
+									<Button
+										onClick={this.props.handleDeleteAllTasks}
+										variant='contained'
+										color='secondary'
+									>
+										Delete All
+									</Button>
+								</Grid>
+							</Grid>
+						</form>
+					</FormBar>
+				</Form>
+			</>
 		);
 	}
 }
+
+export default TodoForm;
